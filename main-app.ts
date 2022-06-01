@@ -53,7 +53,7 @@ export class MainApp extends connect(store)(LitElement) {
   tabIndex = 0;
 
   // dialog: HTMLFormElement;
-  render() {
+  protected render() {
     return html`
       <mwc-tab-bar>
         <mwc-tab
@@ -76,13 +76,5 @@ export class MainApp extends connect(store)(LitElement) {
         ? html`<meta-model></meta-model>`
         : html`<draw-board></draw-board>`}
     `;
-  }
-
-  stateChanged(rootState: RootState): void {}
-
-  //  openDialog() {}
-
-  async firstUpdated() {
-    //  this.initialize();
   }
 }

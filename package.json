@@ -18,7 +18,7 @@
     "@types/react": "18.0.9",
     "@types/react-dom": "18.0.5",
     "@webcomponents/webcomponentsjs": "2.6.0",
-    "draw2d": "imedico/draw2d#shadowdom",
+    "draw2d": "imedico/draw2d#7234dbd90e22eecde35824d60c6b9bac74d3bf30",
     "html-webpack-plugin": "^5.5.0",
     "jquery": "3.6.0",
     "lit": "2.2.5",
