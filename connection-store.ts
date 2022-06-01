@@ -5,17 +5,12 @@ import {
   createAction,
   createEntityAdapter,
 } from '@reduxjs/toolkit';
-import {
-  getItem,
-  setItem,
-  upsertItem,
-  deleteItem,
-  RootState,
-} from './store.ts';
+import { getItem, setItem, upsertItem, deleteItem, RootState } from './store';
+import { Connection } from 'types';
 
-const connectionAdapter = createEntityAdapter<any>();
+const connectionAdapter = createEntityAdapter<Connection>();
 
-const connectionSelectors = connectionAdapter.getSelectors<RootState>(
+const connectionSelectors = connectionAdapter.getSelectors<any>(
   (state) => state.connections
 );
 
@@ -28,7 +23,7 @@ const setConnections = createAsyncThunk<any[], any>('setConnections', (data) =>
   upsertItem('connections', data)
 );
 
-const resetConnections = createAsyncThunk<any[], any>('resetConnections', () =>
+const resetConnections = createAsyncThunk<any[], void>('resetConnections', () =>
   setItem('connections', [])
 );
 
@@ -45,7 +40,9 @@ const setConnectionRepaint = createAction<boolean>('setConnectionRepaint');
 
 const connectionSlice = createSlice({
   name: 'connection',
-  initialState: connectionAdapter.getInitialState(),
+  initialState: connectionAdapter.getInitialState({
+    repaint: false,
+  }),
   reducers: {},
   extraReducers: (builder) => {
     builder

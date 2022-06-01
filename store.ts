@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { elementSlice } from './element-store.ts';
-import { typeSlice } from './type-store.ts';
-import { connectionSlice } from './connection-store.ts';
-import { typeConnectionSlice } from './store/type-connections.ts';
+import { elementSlice } from './element-store';
+import { typeSlice } from './type-store';
+import { connectionSlice } from './connection-store';
+import { typeConnectionSlice } from './store/type-connections';
 import { merge } from 'lodash';
 
 const getItem = (key, defaultValue) => {

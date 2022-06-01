@@ -1,9 +1,9 @@
-import store from '../store.ts';
-import Button from './button.ts';
-import { addElement, updateElement, deleteElement } from '../element-store.ts';
-import { v4 as uuidv4 } from 'uuid';
-import { Attribute, UserData } from './types';
+import store from '../store';
+import Button from './button';
+import { addElement, updateElement, deleteElement } from '../element-store';
+import { Attribute, UserData } from '../types';
 import { debounce } from 'lodash';
+import draw2d from 'draw2d';
 
 // const Element = draw2d.shape.basic.Rectangle.extend({
 const Element = draw2d.shape.composite.Jailhouse.extend({
@@ -14,6 +14,7 @@ const Element = draw2d.shape.composite.Jailhouse.extend({
       onCommit: (text) => {
         const data: Partial<Attribute> = {
           id: this.id,
+          // @ts-ignore
           userData: {
             text,
           },
@@ -367,10 +368,12 @@ const Element = draw2d.shape.composite.Jailhouse.extend({
   },
 
   onContextMenu: function (x, y) {
+    // @ts-ignore
     $.contextMenu({
       selector: 'body',
       events: {
         hide: function () {
+          // @ts-ignore
           $.contextMenu('destroy');
         },
       },

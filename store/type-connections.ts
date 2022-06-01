@@ -11,7 +11,7 @@ import {
   upsertItem,
   deleteItem,
   RootState,
-} from '../store.ts';
+} from '../store';
 
 const connectionAdapter = createEntityAdapter<any>();
 
@@ -34,7 +34,7 @@ const removeTypeConnection = createAsyncThunk<any, string>(
   (id) => deleteItem('type-connections', id)
 );
 
-const resetTypeConnections = createAsyncThunk<any[], any>(
+const resetTypeConnections = createAsyncThunk<any[], void>(
   'resetTypeConnections',
   () => setItem('type-connections', [])
 );
@@ -47,7 +47,9 @@ const setConnectionRepaint = createAction<boolean>('setTypeConnectionRepaint');
 
 const typeConnectionSlice = createSlice({
   name: 'typeConnection',
-  initialState: connectionAdapter.getInitialState(),
+  initialState: connectionAdapter.getInitialState({
+    repaint: false
+  }),
   reducers: {},
   extraReducers: (builder) => {
     builder

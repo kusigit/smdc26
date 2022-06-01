@@ -1,12 +1,8 @@
 import { LitElement, css, html, customElement, property } from 'lit-element';
-// import { state } from 'lit/decorators.js';
-import { createConnection } from './connection.ts';
-import { v4 as uuidv4 } from 'uuid';
-import store, { RootState } from './store.ts';
-import { addType, typeSelectors } from './type-store.ts';
+import store, { RootState } from './store';
 import { connect } from 'pwa-helpers';
-import { typeSelectors, editType, getTypes } from './type-store.ts';
-import { Attribute, UserData } from './types';
+import { typeSelectors, editType } from './type-store';
+import { Attribute } from './types';
 
 import '@material/mwc-button';
 import '@material/mwc-dialog';
@@ -15,15 +11,16 @@ import '@material/mwc-select';
 import '@material/mwc-formfield';
 import '@material/mwc-checkbox';
 import '@material/mwc-list/mwc-list-item';
+import { Dialog } from '@material/mwc-dialog';
 
 @customElement('edit-type-dialog')
 export class EditTypeDialog extends connect(store)(LitElement) {
   // @query('mwc-dialog')
   // dialog: HTMLFormElement;
 
-  static get styles() {
-    return css`
-      .grid { 
+  static styles = [
+    css`
+      .grid {
         margin-top: 16px;
         display: grid;
         width: 512px;
@@ -35,12 +32,11 @@ export class EditTypeDialog extends connect(store)(LitElement) {
           '. .';
       }
 
-
-      [name="text"] {
+      [name='text'] {
         grid-area: text;
       }
 
-      [name="parent"] {
+      [name='parent'] {
         display: none;
         grid-area: parent;
       }
@@ -52,11 +48,11 @@ export class EditTypeDialog extends connect(store)(LitElement) {
       .output {
         grid-area: output;
       }
-    `;
-  }
+    `,
+  ];
 
   @property()
-  dialog: HTMLFormElement;
+  dialog: Dialog;
 
   @property()
   form: HTMLFormElement;
@@ -137,6 +133,7 @@ export class EditTypeDialog extends connect(store)(LitElement) {
 
     const attr: Attribute = {
       id: this.id,
+      // @ts-ignore
       userData: {
         ...userData,
         kpi,
@@ -150,48 +147,72 @@ export class EditTypeDialog extends connect(store)(LitElement) {
   // dialog: HTMLFormElement;
   render() {
     return html`
-      <mwc-dialog heading="Elementtyp" xopen> 
-        <form class="grid"> 
+      <mwc-dialog heading="Elementtyp" xopen>
+        <form class="grid">
+          <mwc-textfield
+            name="text"
+            label="Bezeichnung"
+            maxlength="20"
+            outlined
+            required
+          ></mwc-textfield>
 
-     
-        <mwc-textfield name="text" label="Bezeichnung" maxlength="20" outlined required></mwc-textfield>
+          <mwc-select name="parent" label="Übergeordnetes Element" outlined>
+            <mwc-list-item></mwc-list-item>
+            ${this.types.map(
+              (item) => html`
+                <mwc-list-item value="${item.id}"
+                  >${item.userData.text}</mwc-list-item
+                >
+              `
+            )}
+          </mwc-select>
 
-        <mwc-select name="parent"  label="Übergeordnetes Element" outlined >
-        <mwc-list-item></mwc-list-item>
-        ${this.types.map(
-          (item) => html`
-            <mwc-list-item value="${item.id}">${item.userData.text}</mwc-list-item>
-          `
-        )}
-        </mwc-select>
+          <mwc-select name="figure" outlined label="Figur" fixedMenuPosition>
+            ${this.figures.map(
+              (figure) => html`
+                <mwc-list-item value="${figure}">${figure}</mwc-list-item>
+              `
+            )}
+          </mwc-select>
 
-        <mwc-select name="figure" outlined label="Figur" fixedMenuPosition>
-        ${this.figures.map(
-          (figure) => html`
-            <mwc-list-item value="${figure}">${figure}</mwc-list-item>
-          `
-        )}
-        </mwc-select>
+          <mwc-select
+            name="bgColor"
+            outlined
+            label="Hintergrundfarbe"
+            fixedMenuPosition
+          >
+            <mwc-list-item></mwc-list-item>
+            ${this.colors.map(
+              (color) => html`
+                <mwc-list-item
+                  value="${color}"
+                  style="background-color:var(--material-color-${color}-500)"
+                  >${color}</mwc-list-item
+                >
+              `
+            )}
+          </mwc-select>
 
-        <mwc-select name="bgColor" outlined label="Hintergrundfarbe" fixedMenuPosition>
-          <mwc-list-item></mwc-list-item>
-          ${this.colors.map(
-            (color) => html`
-              <mwc-list-item value="${color}" style="background-color:var(--material-color-${color}-500)">${color}</mwc-list-item>
-            `
-          )}
-        </mwc-select>
-
-
-        <mwc-textfield name="kpi" label="KPI" maxlength="20" outlined></mwc-textfield>
-        <!--
+          <mwc-textfield
+            name="kpi"
+            label="KPI"
+            maxlength="20"
+            outlined
+          ></mwc-textfield>
+          <!--
         <mwc-select name="kpi-value"  label="Werte" outlined >
           <mwc-list-item value="scala3">Scala 1 - 3</mwc-list-item>
           <mwc-list-item value="scala10">Scala 1 - 10</mwc-list-item>       
         </mwc-select> -->
 
-        <mwc-textfield name="kpi" label="KPI" maxlength="20" outlined></mwc-textfield>
-     <!--
+          <mwc-textfield
+            name="kpi"
+            label="KPI"
+            maxlength="20"
+            outlined
+          ></mwc-textfield>
+          <!--
         <fieldset class="input">
           <legend>Verbinder (Eingang)</legend>
           <mwc-formfield label="links">
@@ -224,20 +245,14 @@ export class EditTypeDialog extends connect(store)(LitElement) {
           </mwc-formfield>
         </fieldset>
 -->
-      </form>
-      <mwc-button
-      @click="${() => this.save()}"
-          slot="primaryAction">
-        Speichern
-      </mwc-button>
-      <mwc-button
-          dialogAction="cancel"
-          slot="secondaryAction">
-        Abbrechen
-      </mwc-button>
-    </mwc-dialog>
-
- 
+        </form>
+        <mwc-button @click="${() => this.save()}" slot="primaryAction">
+          Speichern
+        </mwc-button>
+        <mwc-button dialogAction="cancel" slot="secondaryAction">
+          Abbrechen
+        </mwc-button>
+      </mwc-dialog>
     `;
   }
 

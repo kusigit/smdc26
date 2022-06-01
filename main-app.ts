@@ -1,6 +1,8 @@
-import { LitElement, css, html, customElement, property } from 'lit-element';
+import { LitElement, css, html } from 'lit';
+import { customElement, property, query } from 'lit/decorators.js';
 import { connect } from 'pwa-helpers';
-import store, { RootState } from './store.ts';
+import store, { RootState } from './store';
+import { material } from './style/material';
 
 import '@material/mwc-button';
 import '@material/mwc-dialog';
@@ -20,15 +22,14 @@ export class MainApp extends connect(store)(LitElement) {
   // @query('mwc-dialog')
   // dialog: HTMLFormElement;
 
-  static get styles() {
-    return [
-      css`
+  static styles = [
+    material,
+    css`
       mwc-tab-bar {
         margin-bottom: 8px;
       }
     `,
-    ];
-  }
+  ];
 
   @property()
   dialog: HTMLFormElement;
@@ -54,25 +55,26 @@ export class MainApp extends connect(store)(LitElement) {
   // dialog: HTMLFormElement;
   render() {
     return html`
+      <mwc-tab-bar>
+        <mwc-tab
+          label="Metamodell"
+          icon="account_tree"
+          @click=${() => {
+            this.tabIndex = 0;
+          }}
+        ></mwc-tab>
+        <mwc-tab
+          label="Board"
+          icon="dashboard"
+          @click=${() => {
+            this.tabIndex = 1;
+          }}
+        ></mwc-tab>
+      </mwc-tab-bar>
 
-    <mwc-tab-bar>
-      <mwc-tab label="Metamodell" icon="account_tree" @click=${() => {
-        this.tabIndex = 0;
-      }}></mwc-tab>
-      <mwc-tab label="Board" icon="dashboard" @click=${() => {
-        this.tabIndex = 1;
-      }}></mwc-tab>
-    </mwc-tab-bar>
-
-   
-
-    ${
-      this.tabIndex === 0
+      ${this.tabIndex === 0
         ? html`<meta-model></meta-model>`
-        : html`<draw-board></draw-board>`
-    }
-
-
+        : html`<draw-board></draw-board>`}
     `;
   }
 

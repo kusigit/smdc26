@@ -5,20 +5,14 @@ import {
   createEntityAdapter,
   createAction,
 } from '@reduxjs/toolkit';
-import {
-  getItem,
-  setItem,
-  upsertItem,
-  deleteItem,
-  RootState,
-} from './store.ts';
-import { typeConnectionSelectors } from './store/type-connections.ts';
+import { getItem, setItem, upsertItem, deleteItem, RootState } from './store';
+import { typeConnectionSelectors } from './store/type-connections';
 import { v4 as uuidv4 } from 'uuid';
 import { Attribute, UserData } from './types';
 
 const elementAdapter = createEntityAdapter<any>();
 
-const elementSelectors = elementAdapter.getSelectors<RootState>(
+const elementSelectors = elementAdapter.getSelectors<any>(
   (state) => state.elements
 );
 
@@ -137,7 +131,9 @@ const setElementRepaint = createAction<boolean>('setElementRepaint');
 
 const elementSlice = createSlice({
   name: 'element',
-  initialState: elementAdapter.getInitialState(),
+  initialState: elementAdapter.getInitialState({
+    repaint: false,
+  }),
   reducers: {},
   extraReducers: (builder) => {
     builder

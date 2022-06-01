@@ -18,8 +18,10 @@
     "@types/react": "18.0.9",
     "@types/react-dom": "18.0.5",
     "@webcomponents/webcomponentsjs": "2.6.0",
-    "draw2d": "1.0.38",
-    "lit": "2.2.3",
+    "draw2d": "imedico/draw2d#shadowdom",
+    "html-webpack-plugin": "^5.5.0",
+    "jquery": "3.6.0",
+    "lit": "2.2.5",
     "lit-element": "3.2.0",
     "lodash": "^4.17.21",
     "pwa-helpers": "0.9.1",
@@ -28,6 +30,15 @@
     "react-native": "0.68.2",
     "react-redux": "8.0.2",
     "redux": "4.2.0",
+    "ts-loader": "^9.3.0",
+    "tsconfig-paths-webpack-plugin": "^3.5.2",
+    "typescript": "^4.7.2",
     "uuid": "8.3.2"
+  },
+  "devDependencies": {
+    "@types/jquery": "^3.5.14",
+    "webpack": "^5.72.1",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.9.1"
   }
 }

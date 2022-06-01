@@ -1,13 +1,9 @@
 import { LitElement, css, html, customElement, property } from 'lit-element';
-// import { state } from 'lit/decorators.js';
-import { v4 as uuidv4 } from 'uuid';
-import store, { RootState } from './store.ts';
-import { addType, typeSelectors } from './type-store.ts';
+import store, { RootState } from '../store';
 import { connect } from 'pwa-helpers';
-import Type, { PortLocatorRight } from './shape/type';
-import Canvas from './canvas.ts';
-import { Attribute } from './types.ts';
-import { addConnection, createConnection } from './connection.ts';
+import Type from '../shape/type';
+import { Attribute, Connection } from '../types';
+import { addConnection, createConnection } from '../connection';
 import {
   getConnections,
   typeConnectionSelectors,
@@ -16,7 +12,7 @@ import {
   removeTypeConnection,
   resetTypeConnections,
   selectConnectionRepaint,
-} from './store/type-connections.ts';
+} from '../store/type-connections';
 import {
   typeSelectors,
   setTypes,
@@ -24,9 +20,10 @@ import {
   editType,
   setTypeRepaint,
   selectTypeRepaint,
-} from './type-store.ts';
-import { drawBoardStyles } from './style/draw-board-styles';
+} from '../type-store';
+import { drawBoardStyles } from '../style/draw-board-styles';
 import { debounce } from 'lodash';
+import draw2d from 'draw2d';
 
 import '@material/mwc-button';
 import '@material/mwc-dialog';
@@ -35,9 +32,8 @@ import '@material/mwc-select';
 import '@material/mwc-formfield';
 import '@material/mwc-checkbox';
 import '@material/mwc-list/mwc-list-item';
-import './new-type-dialog';
-import './edit-type-dialog';
-import { Attribute } from './types';
+import '../new-type-dialog';
+import '../edit-type-dialog';
 
 const DRAW_DEBOUNCE = 200;
 
@@ -46,10 +42,9 @@ export class MetaModel extends connect(store)(LitElement) {
   // @query('mwc-dialog')
   // dialog: HTMLFormElement;
 
-  static get styles() {
-    return [
-      drawBoardStyles,
-      css`
+  static styles = [
+    drawBoardStyles,
+    css`
       #gfx_holder {
         position: absolute;
         top: 110px;
@@ -60,8 +55,7 @@ export class MetaModel extends connect(store)(LitElement) {
         background-color: var(--material-color-grey-100);
       }
     `,
-    ];
-  }
+  ];
 
   @property()
   canvas: HTMLFormElement;
@@ -84,32 +78,21 @@ export class MetaModel extends connect(store)(LitElement) {
   private drawing = false;
 
   async reset() {
-    //   this.elements = [];
-    //   this.types = [];
-    //  await store.dispatch(setElements([]));
     await store.dispatch(setTypes([]));
     await store.dispatch(resetTypeConnections());
-
-    //   this.setItem('elements', this.elements);
-    //   this.setItem('types', this.types);
-    //   location.reload();
   }
 
-  // dialog: HTMLFormElement;
   render() {
     return html`
-
       <mwc-button @click="${() => this.newDialog.open()}" outlined>
         Neu
       </mwc-button>
-      <mwc-button @click="${() => this.reset()}" outlined>
-        Reset
-      </mwc-button> 
+      <mwc-button @click="${() => this.reset()}" outlined> Reset </mwc-button>
 
       <div id="gfx_holder"></div>
 
-      <new-type-dialog></new-type-dialog> 
-      <edit-type-dialog></edit-type-dialog> 
+      <new-type-dialog></new-type-dialog>
+      <edit-type-dialog></edit-type-dialog>
     `;
   }
 
@@ -243,7 +226,7 @@ export class MetaModel extends connect(store)(LitElement) {
     //   this.canvas = new draw2d.Canvas('gfx_holder');
 
     const container = this.shadowRoot.querySelector('#gfx_holder');
-    this.canvas = new Canvas(container);
+    this.canvas = new draw2d.Canvas(container);
     // console.log('firstUpdated', this.canvas);
 
     this.canvas.installEditPolicy(
@@ -289,7 +272,7 @@ export class MetaModel extends connect(store)(LitElement) {
       pos[2] = 'bottom';
       pos[3] = 'left';
 
-      const data: Attribute = {
+      const data: Connection = {
         //        type: this.type,
         //        height: this.height,
         //        width: this.width,

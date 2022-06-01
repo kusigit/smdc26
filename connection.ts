@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+import draw2d from 'draw2d';
 
 const Connection = draw2d.Connection.extend({
   /** required for JSON serialize/deserialize. **/
@@ -39,10 +40,12 @@ const Connection = draw2d.Connection.extend({
   onContextMenu: function (x, y) {
     // console.log(x, y);
 
+    // @ts-ignore
     $.contextMenu({
       selector: 'body',
       events: {
         hide: function () {
+          // @ts-ignore
           $.contextMenu('destroy');
         },
       },

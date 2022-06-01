@@ -1,14 +1,9 @@
 import { LitElement, css, html, customElement, property } from 'lit-element';
-// import { state } from 'lit/decorators.js';
-import { createConnection } from './connection.ts';
-import { v4 as uuidv4 } from 'uuid';
-import store, { RootState } from './store.ts';
-import { addType, typeSelectors } from './type-store.ts';
+import store, { RootState } from './store';
 import { connect } from 'pwa-helpers';
-import Canvas from './canvas.ts';
 import Element from './shape/element';
-import { createConnection, addConnection } from './connection.ts';
-import { typeSelectors, setTypes, getTypes } from './type-store.ts';
+import { createConnection, addConnection } from './connection';
+import { typeSelectors, getTypes } from './type-store';
 import {
   getElements,
   addElement,
@@ -17,7 +12,7 @@ import {
   resetElements,
   setElementRepaint,
   setElements,
-} from './element-store.ts';
+} from './element-store';
 import {
   setConnections,
   resetConnections,
@@ -26,9 +21,12 @@ import {
   removeConnection,
   connectionSelectors,
   setConnectionRepaint,
-} from './connection-store.ts';
+} from './connection-store';
 import { Attribute, UserData } from './types';
 import { debounce } from 'lodash';
+import { drawBoardStyles } from './style/draw-board-styles';
+import { material } from './style/material';
+import draw2d from 'draw2d';
 
 import '@material/mwc-button';
 import '@material/mwc-dialog';
@@ -37,7 +35,6 @@ import '@material/mwc-select';
 import '@material/mwc-formfield';
 import '@material/mwc-checkbox';
 import '@material/mwc-list/mwc-list-item';
-import { drawBoardStyles } from './style/draw-board-styles';
 
 const DRAW_DEBOUNCE = 200;
 
@@ -46,11 +43,10 @@ export class DrawBoard extends connect(store)(LitElement) {
   // @query('mwc-dialog')
   // dialog: HTMLFormElement;
 
-  static get styles() {
-    return [
-      drawBoardStyles,
-      css`
-
+  static styles = [
+    material,
+    drawBoardStyles,
+    css`
       #gfx_holder {
         position: absolute;
         top: 110px;
@@ -61,8 +57,7 @@ export class DrawBoard extends connect(store)(LitElement) {
         background-color: var(--material-color-grey-100);
       }
     `,
-    ];
-  }
+  ];
 
   @property()
   canvas: HTMLFormElement;
@@ -77,24 +72,6 @@ export class DrawBoard extends connect(store)(LitElement) {
   connections = [];
 
   private drawing = false;
-
-  save() {
-    const writer = new draw2d.io.json.Writer();
-    writer.marshal(this.canvas, async (json) => {
-      // convert the json object into string representation
-      //  var jsonTxt = JSON.stringify(json, null, 2);
-
-      const elements = json.filter((item) => item.type === 'Element');
-      // console.log(elements);
-      //  this.setItem('elements', elements);
-      await store.dispatch(setElements(elements));
-
-      const connections = json.filter((item) => item.type === 'Connection');
-      //  console.log(connections);
-      // this.setItem('connections', connections);
-      await store.dispatch(setConnections(connections));
-    });
-  }
 
   async reset() {
     //   this.elements = [];
@@ -112,18 +89,13 @@ export class DrawBoard extends connect(store)(LitElement) {
   // dialog: HTMLFormElement;
   render() {
     return html`
- <!--     <mwc-button @click="${() => this.save()}" outlined>
-        Speichern
-      </mwc-button> -->
-      <mwc-button @click="${() => this.reset()}" outlined>
-        Reset
-      </mwc-button>
+      <mwc-button @click="${() => this.reset()}" outlined> Reset </mwc-button>
 
       ${this.types
         .filter((item) => !item.userData.parent)
         .map(
           (item: Attribute) => html`
-              <mwc-button
+            <mwc-button
               @click="${() => {
                 //        const buttons = this.types.filter(
                 //          (type) => item.id === type.userData.parent
@@ -148,17 +120,17 @@ export class DrawBoard extends connect(store)(LitElement) {
 
                 store.dispatch(addElement({ item, userData }));
                 //              store.dispatch(addElement(item));
-              }}" outlined
-              >
-                + ${item.userData.text}
-              </mwc-button>
-      `
+              }}"
+              outlined
+            >
+              + ${item.userData.text}
+            </mwc-button>
+          `
         )}
 
-        <div id="gfx_holder"></div>
+      <div id="gfx_holder"></div>
 
-      <new-type-dialog></new-type-dialog> 
-
+      <new-type-dialog></new-type-dialog>
     `;
   }
 
@@ -261,7 +233,7 @@ export class DrawBoard extends connect(store)(LitElement) {
     //   this.canvas = new draw2d.Canvas('gfx_holder');
     //    this.canvas = window.getCanvas();
     const container = this.shadowRoot.querySelector('#gfx_holder');
-    this.canvas = new Canvas(container);
+    this.canvas = new draw2d.Canvas(container);
     //    this.canvas = new Canvas(container, 800, 800);
 
     this.canvas.installEditPolicy(

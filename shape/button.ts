@@ -1,3 +1,5 @@
+import draw2d from 'draw2d';
+
 export default draw2d.shape.basic.Label.extend({
   init: function (attr) {
     const { action, text, bgColor } = attr;

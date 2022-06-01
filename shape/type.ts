@@ -1,8 +1,9 @@
-import store from '../store.ts';
-import Button from './button.ts';
+import store from '../store';
+import Button from './button';
 import { deleteType, savePosition } from '../type-store';
-import { Attribute } from '../types.ts';
+import { Attribute } from '../types';
 import { debounce } from 'lodash';
+import draw2d from 'draw2d';
 
 // const Element = draw2d.shape.basic.Rectangle.extend({
 const Element = draw2d.shape.composite.Jailhouse.extend({
@@ -197,40 +198,6 @@ const Element = draw2d.shape.composite.Jailhouse.extend({
 
     // console.log(this.hybridPorts.data[3].id);
 
-    const updatePort = (number, connection) => {
-      //  console.log(
-      //    'onConnect',
-      //    number,
-      //        this.userData.text,
-      //    connection.sourcePort?.id,
-      //    connection.targetPort?.parent.id
-      //  );
-
-      const ports = this.hybridPorts.data.map((item) => ({
-        id: item.id,
-        conn: !!item.connections,
-        //       conn: item.connections.data.length,
-      }));
-
-      const userData = {
-        ...this.userData,
-        //  ports,
-        //  sourcePort: connection.sourcePort?.id,
-        sourcePorts: [...this.userData.sourcePorts, connection.sourcePort?.id],
-      };
-
-      const data = {
-        id: this.id,
-        type: this.type,
-        height: this.height,
-        width: this.width,
-        x: this.x,
-        y: this.y,
-        userData,
-      };
-
-      store.dispatch(updatePorts(data));
-    };
     /*
     this.hybridPorts.data[0].onConnect = (connection) => {
       updatePort(0, connection);
@@ -368,10 +335,12 @@ const Element = draw2d.shape.composite.Jailhouse.extend({
   },
 
   onContextMenu: function (x, y) {
+    // @ts-ignore
     $.contextMenu({
       selector: 'body',
       events: {
         hide: function () {
+          // @ts-ignore
           $.contextMenu('destroy');
         },
       },

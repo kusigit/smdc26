@@ -8,11 +8,10 @@ import {
 import {
   getItem,
   setItem,
-  updateItem,
   upsertItem,
   deleteItem,
   RootState,
-} from './store.ts';
+} from './store';
 
 const typeAdapter = createEntityAdapter<any>();
 
@@ -53,7 +52,9 @@ const setTypeRepaint = createAction<boolean>('setTypeRepaint');
 
 const typeSlice = createSlice({
   name: 'type',
-  initialState: typeAdapter.getInitialState(),
+  initialState: typeAdapter.getInitialState({
+    repaint: false
+  }),
   reducers: {},
   extraReducers: (builder) => {
     builder

@@ -7,14 +7,6 @@ type UserData = {
   bgColor: string;
   buttons: any[];
   typeId: string;
-  inputLeft: boolean;
-  inputTop: boolean;
-  inputRight: boolean;
-  inputBottom: boolean;
-  outputLeft: boolean;
-  outputTop: boolean;
-  outputRight: boolean;
-  outputBottom: boolean;
   ports: number[];
 };
 
@@ -28,4 +20,18 @@ type Attribute = {
   userData: UserData;
 };
 
-export { Attribute, UserData };
+type Connection = {
+  id: string;
+  source: {
+    id: string;
+    parentId: string;
+    position: string;
+  };
+  target: {
+    id: string;
+    parentId: string;
+    position: string;
+  };
+};
+
+export { Attribute, Connection, UserData };

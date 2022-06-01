@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "target": "es6",
+    "moduleResolution": "Node",
     "experimentalDecorators": true,
-    "useDefineForClassFields": false
+    "useDefineForClassFields": false,
+    "typeRoots": ["./node_modules/@types", "/types"]
   }
 }

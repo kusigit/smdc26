@@ -1,11 +1,8 @@
 import { LitElement, css, html, customElement, property } from 'lit-element';
-// import { state } from 'lit/decorators.js';
-import { createConnection } from './connection.ts';
 import { v4 as uuidv4 } from 'uuid';
-import store, { RootState } from './store.ts';
-import { addType, typeSelectors } from './type-store.ts';
+import store, { RootState } from './store';
 import { connect } from 'pwa-helpers';
-import { typeSelectors, setTypes, getTypes } from './type-store.ts';
+import { typeSelectors, getTypes, addType } from './type-store';
 import { Attribute, UserData } from './types';
 
 import '@material/mwc-button';
@@ -15,15 +12,16 @@ import '@material/mwc-select';
 import '@material/mwc-formfield';
 import '@material/mwc-checkbox';
 import '@material/mwc-list/mwc-list-item';
+import { Dialog } from '@material/mwc-dialog';
 
 @customElement('new-type-dialog')
 export class NewTypeDialog extends connect(store)(LitElement) {
   // @query('mwc-dialog')
   // dialog: HTMLFormElement;
 
-  static get styles() {
-    return css`
-      .grid { 
+  static styles = [
+    css`
+      .grid {
         margin-top: 16px;
         display: grid;
         width: 512px;
@@ -35,12 +33,11 @@ export class NewTypeDialog extends connect(store)(LitElement) {
           '. .';
       }
 
-
-      [name="text"] {
+      [name='text'] {
         grid-area: text;
       }
 
-      [name="parent"] {
+      [name='parent'] {
         display: none;
         grid-area: parent;
       }
@@ -52,11 +49,11 @@ export class NewTypeDialog extends connect(store)(LitElement) {
       .output {
         grid-area: output;
       }
-    `;
-  }
+    `,
+  ];
 
   @property()
-  dialog: HTMLFormElement;
+  dialog: Dialog;
 
   @property()
   form: HTMLFormElement;
@@ -122,7 +119,7 @@ export class NewTypeDialog extends connect(store)(LitElement) {
       const kpi = [];
       const formData = new FormData(this.form);
 
-      let userData = {
+      let userData: Partial<UserData> = {
         //    ...this.attr.userData,
       };
 
@@ -150,38 +147,19 @@ export class NewTypeDialog extends connect(store)(LitElement) {
 */
       const attr: Attribute = {
         id: uuidv4(),
+        // @ts-ignore
         userData: {
           ...userData,
-          //   kpi: [],
           kpi,
           level: this.level,
           parent: this.parent,
-          //  text: '',
-          //  figure: 'rectangle',
-          //  bgColor: 'blue',
-          //  buttons: [],
           ports: [uuidv4(), uuidv4(), uuidv4(), uuidv4()],
         },
-        //  x,
-        //  y,
         height: 120,
         width: 240,
         x: this.x + 20,
         y: this.y + 50,
       };
-
-      //    const node = new Type(attr);
-      //    console.log(node.hybridPorts.data);
-
-      // const ports = node.hybridPorts.data.map((port) => port.id);
-
-      //  attr = {
-      //    ...attr,
-      //    userData: {
-      //     ...attr.userData,
-      //      ports,
-      //   },
-      // };
 
       await store.dispatch(addType(attr));
       this.dialog.close();
@@ -191,48 +169,73 @@ export class NewTypeDialog extends connect(store)(LitElement) {
   // dialog: HTMLFormElement;
   render() {
     return html`
-      <mwc-dialog heading="Elementtyp" xopen> 
-        <form class="grid"> 
+      <mwc-dialog heading="Elementtyp" xopen>
+        <form class="grid">
+          <mwc-textfield
+            name="text"
+            label="Bezeichnung"
+            maxlength="20"
+            outlined
+            required
+          ></mwc-textfield>
 
-        <mwc-textfield name="text" label="Bezeichnung" maxlength="20" outlined required></mwc-textfield>
+          <mwc-select name="parent" label="Übergeordnetes Element" outlined>
+            <mwc-list-item></mwc-list-item>
+            ${this.types.map(
+              (item) => html`
+                <mwc-list-item value="${item.id}"
+                  >${item.userData.text}</mwc-list-item
+                >
+              `
+            )}
+          </mwc-select>
 
-        <mwc-select name="parent" label="Übergeordnetes Element" outlined >
-        <mwc-list-item></mwc-list-item>
-        ${this.types.map(
-          (item) => html`
-            <mwc-list-item value="${item.id}">${item.userData.text}</mwc-list-item>
-          `
-        )}
-        </mwc-select>
+          <mwc-select name="figure" outlined label="Figur" fixedMenuPosition>
+            ${this.figures.map(
+              (figure) => html`
+                <mwc-list-item value="${figure}">${figure}</mwc-list-item>
+              `
+            )}
+          </mwc-select>
 
-        <mwc-select name="figure" outlined label="Figur" fixedMenuPosition>
-        ${this.figures.map(
-          (figure) => html`
-            <mwc-list-item value="${figure}">${figure}</mwc-list-item>
-          `
-        )}
-        </mwc-select>
+          <mwc-select
+            name="bgColor"
+            outlined
+            label="Hintergrundfarbe"
+            fixedMenuPosition
+          >
+            <mwc-list-item></mwc-list-item>
+            ${this.colors.map(
+              (color) => html`
+                <mwc-list-item
+                  value="${color}"
+                  style="background-color:var(--material-color-${color}-500)"
+                  >${color}</mwc-list-item
+                >
+              `
+            )}
+          </mwc-select>
 
-        <mwc-select name="bgColor" outlined label="Hintergrundfarbe" fixedMenuPosition>
-          <mwc-list-item></mwc-list-item>
-          ${this.colors.map(
-            (color) => html`
-              <mwc-list-item value="${color}" style="background-color:var(--material-color-${color}-500)">${color}</mwc-list-item>
-            `
-          )}
-        </mwc-select>
-
-
-        <mwc-textfield name="kpi" label="KPI" maxlength="20" outlined></mwc-textfield>
-        <!--
+          <mwc-textfield
+            name="kpi"
+            label="KPI"
+            maxlength="20"
+            outlined
+          ></mwc-textfield>
+          <!--
         <mwc-select name="kpi-value"  label="Werte" outlined >
           <mwc-list-item value="scala3">Scala 1 - 3</mwc-list-item>
           <mwc-list-item value="scala10">Scala 1 - 10</mwc-list-item>       
         </mwc-select> -->
 
-        <mwc-textfield name="kpi" label="KPI" maxlength="20" outlined></mwc-textfield>
-     
-        <!--
+          <mwc-textfield
+            name="kpi"
+            label="KPI"
+            maxlength="20"
+            outlined
+          ></mwc-textfield>
+
+          <!--
         <fieldset class="input">
           <legend>Verbinder (Eingang)</legend>
           <mwc-formfield label="links">
@@ -265,20 +268,14 @@ export class NewTypeDialog extends connect(store)(LitElement) {
           </mwc-formfield>
         </fieldset>
 -->
-      </form>
-      <mwc-button
-      @click="${() => this.save()}"
-          slot="primaryAction">
-        Speichern
-      </mwc-button>
-      <mwc-button
-          dialogAction="cancel"
-          slot="secondaryAction">
-        Abbrechen
-      </mwc-button>
-    </mwc-dialog>
-
- 
+        </form>
+        <mwc-button @click="${() => this.save()}" slot="primaryAction">
+          Speichern
+        </mwc-button>
+        <mwc-button dialogAction="cancel" slot="secondaryAction">
+          Abbrechen
+        </mwc-button>
+      </mwc-dialog>
     `;
   }
 
@@ -334,7 +331,7 @@ export class NewTypeDialog extends connect(store)(LitElement) {
     this.form = this.shadowRoot.querySelector('form');
 
     this.text = this.shadowRoot.querySelector('[name="text"]');
-    this.parent = this.shadowRoot.querySelector('[name="parent"]');
+  //  this.parent = this.shadowRoot.querySelector('[name="parent"]');
     this.bgColor = this.shadowRoot.querySelector('[name="bgColor"]');
 
     this.kpi = this.shadowRoot.querySelector('[name="kpi"]');
