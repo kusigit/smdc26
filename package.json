@@ -1,0 +1,33 @@
+{
+  "name": "lit-element-hello-world",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@material/mwc-base": "0.23.0",
+    "@material/mwc-button": "0.23.0",
+    "@material/mwc-checkbox": "0.23.0",
+    "@material/mwc-dialog": "0.23.0",
+    "@material/mwc-formfield": "0.23.0",
+    "@material/mwc-icon": "0.23.0",
+    "@material/mwc-list": "0.23.0",
+    "@material/mwc-select": "0.23.0",
+    "@material/mwc-tab": "0.23.0",
+    "@material/mwc-tab-bar": "0.23.0",
+    "@material/mwc-textfield": "0.23.0",
+    "@reduxjs/toolkit": "1.8.2",
+    "@types/react": "18.0.9",
+    "@types/react-dom": "18.0.5",
+    "@webcomponents/webcomponentsjs": "2.6.0",
+    "draw2d": "1.0.38",
+    "lit": "2.2.3",
+    "lit-element": "3.2.0",
+    "lodash": "^4.17.21",
+    "pwa-helpers": "0.9.1",
+    "react": "18.1.0",
+    "react-dom": "18.1.0",
+    "react-native": "0.68.2",
+    "react-redux": "8.0.2",
+    "redux": "4.2.0",
+    "uuid": "8.3.2"
+  }
+}
