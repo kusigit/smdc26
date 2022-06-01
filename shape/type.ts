@@ -1,42 +1,19 @@
-import store from './store.ts';
+import store from '../store.ts';
 import Button from './button.ts';
-import { addElement } from './element-store.ts';
-import { updatePorts, deleteType, savePosition } from './type-store';
-import { Attribute } from './types.ts';
+import { deleteType, savePosition } from '../type-store';
+import { Attribute } from '../types.ts';
 import { debounce } from 'lodash';
-
-const PortLocatorRight = draw2d.layout.locator.PortLocator.extend({
-  init: function () {
-    this._super();
-  },
-  relocate: function (index, figure) {
-    var p = figure.getParent();
-    this.applyConsiderRotation(figure, p.getWidth(), p.getHeight() / 2);
-  },
-});
 
 // const Element = draw2d.shape.basic.Rectangle.extend({
 const Element = draw2d.shape.composite.Jailhouse.extend({
   NAME: 'Type',
 
   addTitle: function (text) {
-    const editorAttr = {
-      onCommit: (text) => {
-        this.userData = {
-          ...this.userData,
-          text,
-        };
-      },
-    };
-
-    // const editor = new draw2d.ui.LabelInplaceEditor(editorAttr);
-
     const labelAttr = {
       text,
       fontColor: '#000',
       stroke: 0,
       fontSize: 20,
-      //  editor,
     };
 
     const label = new draw2d.shape.basic.Label(labelAttr);
@@ -423,5 +400,3 @@ const Element = draw2d.shape.composite.Jailhouse.extend({
 });
 
 export default Element;
-
-export { PortLocatorRight };

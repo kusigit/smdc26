@@ -7,7 +7,6 @@ import { addType, typeSelectors } from './type-store.ts';
 import { connect } from 'pwa-helpers';
 import { typeSelectors, setTypes, getTypes } from './type-store.ts';
 import { Attribute, UserData } from './types';
-import Type from './type.ts';
 
 import '@material/mwc-button';
 import '@material/mwc-dialog';

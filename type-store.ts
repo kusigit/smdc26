@@ -13,8 +13,6 @@ import {
   deleteItem,
   RootState,
 } from './store.ts';
-import Type from './type.ts';
-import { Attribute } from './types';
 
 const typeAdapter = createEntityAdapter<any>();
 

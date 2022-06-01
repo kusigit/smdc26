@@ -1,6 +1,6 @@
-import store from './store.ts';
+import store from '../store.ts';
 import Button from './button.ts';
-import { addElement, updateElement, deleteElement } from './element-store.ts';
+import { addElement, updateElement, deleteElement } from '../element-store.ts';
 import { v4 as uuidv4 } from 'uuid';
 import { Attribute, UserData } from './types';
 import { debounce } from 'lodash';

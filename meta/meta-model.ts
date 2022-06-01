@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import store, { RootState } from './store.ts';
 import { addType, typeSelectors } from './type-store.ts';
 import { connect } from 'pwa-helpers';
-import Type, { PortLocatorRight } from './type.ts';
+import Type, { PortLocatorRight } from './shape/type';
 import Canvas from './canvas.ts';
 import { Attribute } from './types.ts';
 import { addConnection, createConnection } from './connection.ts';
@@ -25,7 +25,7 @@ import {
   setTypeRepaint,
   selectTypeRepaint,
 } from './type-store.ts';
-import { drawBoardStyles } from './draw-board-styles';
+import { drawBoardStyles } from './style/draw-board-styles';
 import { debounce } from 'lodash';
 
 import '@material/mwc-button';

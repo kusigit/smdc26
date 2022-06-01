@@ -1,24 +1,6 @@
 import { LitElement, css, html, customElement, property } from 'lit-element';
-// import { state } from 'lit/decorators.js';
-import Element from './element.ts';
-import Button from './button.ts';
-// import { v4 as uuidv4 } from 'uuid';
-import { createConnection, addConnection } from './connection.ts';
 import { connect } from 'pwa-helpers';
-import material from './material.ts';
 import store, { RootState } from './store.ts';
-import {
-  getElements,
-  addElement,
-  elementSelectors,
-  setElements,
-} from './element-store.ts';
-import { typeSelectors, setTypes, getTypes } from './type-store.ts';
-import {
-  setConnections,
-  getConnections,
-  connectionSelectors,
-} from './connection-store.ts';
 
 import '@material/mwc-button';
 import '@material/mwc-dialog';
@@ -30,7 +12,7 @@ import '@material/mwc-tab-bar';
 import '@material/mwc-tab';
 import '@material/mwc-list/mwc-list-item';
 import './new-type-dialog.ts';
-import './meta-model.ts';
+import './meta/meta-model';
 import './draw-board.ts';
 
 @customElement('main-app')

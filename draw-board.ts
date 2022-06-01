@@ -6,7 +6,7 @@ import store, { RootState } from './store.ts';
 import { addType, typeSelectors } from './type-store.ts';
 import { connect } from 'pwa-helpers';
 import Canvas from './canvas.ts';
-import Element from './element.ts';
+import Element from './shape/element';
 import { createConnection, addConnection } from './connection.ts';
 import { typeSelectors, setTypes, getTypes } from './type-store.ts';
 import {
@@ -37,7 +37,7 @@ import '@material/mwc-select';
 import '@material/mwc-formfield';
 import '@material/mwc-checkbox';
 import '@material/mwc-list/mwc-list-item';
-import { drawBoardStyles } from './draw-board-styles';
+import { drawBoardStyles } from './style/draw-board-styles';
 
 const DRAW_DEBOUNCE = 200;
 
